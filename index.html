@@ -99,6 +99,7 @@
             border-radius: 8px;
             justify-content: center;
             margin: 20px 0;
+            overflow-x: auto;
         }
         .cell {
             width: 35px;
@@ -137,6 +138,7 @@
         .difficulty-selector {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
         .difficulty-btn {
             background: #34495e;
@@ -152,6 +154,15 @@
         }
         .difficulty-btn:hover {
             background: #e67e22;
+        }
+        .custom-btn {
+            background: #9b59b6;
+        }
+        .custom-btn:hover {
+            background: #8e44ad;
+        }
+        .custom-btn.active {
+            background: #e74c3c;
         }
         
         /* Highscore Bereich */
@@ -253,7 +264,7 @@
             background: #2c3e50;
             border-radius: 20px;
             padding: 25px;
-            max-width: 500px;
+            max-width: 550px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
@@ -262,29 +273,22 @@
             animation: modalSlideIn 0.3s ease-out;
         }
         
-        /* 🌟 MODERNER SCROLLBAR FÜR DAS POPUP 🌟 */
-        /* Für Webkit-Browser (Chrome, Edge, Safari) */
         .help-modal-content::-webkit-scrollbar {
             width: 8px;
         }
-        
         .help-modal-content::-webkit-scrollbar-track {
             background: #1a1a2e;
             border-radius: 10px;
             margin: 10px 0;
         }
-        
         .help-modal-content::-webkit-scrollbar-thumb {
             background: #e74c3c;
             border-radius: 10px;
             transition: background 0.2s;
         }
-        
         .help-modal-content::-webkit-scrollbar-thumb:hover {
             background: #c0392b;
         }
-        
-        /* Für Firefox */
         .help-modal-content {
             scrollbar-width: thin;
             scrollbar-color: #e74c3c #1a1a2e;
@@ -359,6 +363,127 @@
             margin: 2px;
             font-size: 0.85em;
         }
+        .help-modal-content .custom-feature {
+            background: #9b59b6;
+            padding: 2px 8px;
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 0.85em;
+        }
+        
+        /* Custom Difficulty Modal */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 1002;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .custom-modal-content {
+            background: #2c3e50;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 400px;
+            width: 90%;
+            color: #ecf0f1;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        .custom-modal-content h2 {
+            color: #9b59b6;
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 2px solid #9b59b6;
+            padding-bottom: 10px;
+        }
+        .custom-modal-content .input-group {
+            margin: 20px 0;
+        }
+        .custom-modal-content label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #f39c12;
+        }
+        .custom-modal-content input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1em;
+            box-sizing: border-box;
+            background: #1a1a2e;
+            color: white;
+        }
+        .custom-modal-content input:focus {
+            outline: 2px solid #9b59b6;
+        }
+        .custom-modal-content .info-text {
+            font-size: 0.85em;
+            color: #95a5a6;
+            margin-top: 5px;
+        }
+        .custom-modal-content .error-message {
+            color: #e74c3c;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+        .custom-modal-content .warning-message {
+            color: #f39c12;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+        .custom-modal-content .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .custom-modal-content button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .custom-modal-content .save-btn {
+            background: #9b59b6;
+            color: white;
+        }
+        .custom-modal-content .save-btn:hover {
+            background: #8e44ad;
+        }
+        .custom-modal-content .cancel-btn {
+            background: #34495e;
+            color: white;
+        }
+        .custom-modal-content .cancel-btn:hover {
+            background: #2c3e50;
+        }
+        .custom-modal-content .preset-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .custom-modal-content .preset-btn {
+            background: #34495e;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.85em;
+        }
+        .custom-modal-content .preset-btn:hover {
+            background: #2c3e50;
+        }
         
         /* Modal für Namenseingabe */
         .name-modal {
@@ -412,6 +537,10 @@
         @media (max-width: 768px) {
             .cell { width: 30px; height: 30px; font-size: 1em; }
             .help-modal-content { padding: 20px; }
+            .custom-modal-content { padding: 20px; }
+        }
+        @media (max-width: 480px) {
+            .cell { width: 25px; height: 25px; font-size: 0.9em; }
         }
     </style>
 </head>
@@ -424,6 +553,7 @@
                     <button class="difficulty-btn active" data-difficulty="beginner">Anfänger</button>
                     <button class="difficulty-btn" data-difficulty="intermediate">Mittel</button>
                     <button class="difficulty-btn" data-difficulty="expert">Experte</button>
+                    <button class="difficulty-btn custom-btn" data-difficulty="custom">✨ Custom</button>
                 </div>
                 <div class="timer">⏱️ <span id="timer">0</span>s</div>
                 <div class="mine-counter">💣 <span id="mineCount">0</span></div>
@@ -434,10 +564,10 @@
             <div id="gameBoard" class="game-board"></div>
             <div class="game-status" id="gameStatus">Klicke auf ein Feld, um zu beginnen!</div>
             
-            <!-- Highscore Bereich - Standardmäßig zugeklappt -->
+            <!-- Highscore Bereich - NUR für Standard-Schwierigkeiten -->
             <div class="highscore-section">
                 <div class="highscore-header" id="highscoreHeader">
-                    <h3>🏆 HIGHSCORES 🏆</h3>
+                    <h3>🏆 HIGHSCORES (Anfänger, Mittel, Experte) 🏆</h3>
                     <span class="toggle-icon" id="toggleIcon">▶</span>
                 </div>
                 <div class="highscore-content collapsed" id="highscoreContent"></div>
@@ -459,7 +589,7 @@
                 <li><kbd>Rechtsklick</kbd> - Flagge setzen/entfernen (markiert vermutete Minen)</li>
                 <li><kbd>❓ Hilfe</kbd> - Diese Anleitung öffnen</li>
                 <li><kbd>🔄 Neues Spiel</kbd> - Startet ein neues Spiel</li>
-                <li><kbd>Anfänger/Mittel/Experte</kbd> - Schwierigkeitsgrad ändern</li>
+                <li><kbd>Anfänger/Mittel/Experte/Custom</kbd> - Schwierigkeitsgrad ändern</li>
             </ul>
             
             <h3>🔢 Die Zahlen</h3>
@@ -477,22 +607,76 @@
                 <li>Die Flaggen-Anzeige 🚩 hilft dir, nicht zu viele Flaggen zu setzen.</li>
             </ul>
             
-            <div class="tip-box">
-                <strong>🏆 Bestzeiten:</strong> Je schneller du gewinnst, desto besser! Deine Top 10 Zeiten werden pro Schwierigkeitsgrad gespeichert. Bei einer neuen Bestzeit kannst du deinen Namen eingeben!
-            </div>
+            <h3>✨ Benutzerdefinierte Spiele (Custom)</h3>
+            <ul>
+                <li>Klicke auf <span class="custom-feature">✨ Custom</span> um dein eigenes Spielfeld zu erstellen</li>
+                <li><strong>Breite & Höhe:</strong> 5 bis 40 Felder (max. 1.600 Felder gesamt)</li>
+                <li><strong>Minenanzahl:</strong> Frei wählbar zwischen 1 und (Felder-1)</li>
+                <li><strong>Empfehlung:</strong> 10-40% Minen für ein ausgewogenes Spiel</li>
+                <li><strong>Vordefinierte Presets:</strong> Klein (10x10, 20 Minen), Groß (20x20, 80 Minen), Extrem (30x30, 200 Minen)</li>
+                <li><strong>Warnungen:</strong> Bei zu vielen oder zu wenigen Minen erscheint eine Warnung (Start trotzdem möglich)</li>
+                <li><strong>Keine Highscores:</strong> Für Custom-Spiele werden keine Bestzeiten gespeichert</li>
+            </ul>
             
             <h3>📊 Schwierigkeitsgrade</h3>
             <ul>
-                <li><span class="difficulty-badge">Anfänger</span> 8x8 Feld mit 10 Minen</li>
-                <li><span class="difficulty-badge">Mittel</span> 12x12 Feld mit 30 Minen</li>
-                <li><span class="difficulty-badge">Experte</span> 16x16 Feld mit 60 Minen</li>
+                <li><span class="difficulty-badge">Anfänger</span> 8x8 Feld mit 10 Minen (ca. 16% Minen) - mit Highscore</li>
+                <li><span class="difficulty-badge">Mittel</span> 12x12 Feld mit 30 Minen (ca. 21% Minen) - mit Highscore</li>
+                <li><span class="difficulty-badge">Experte</span> 16x16 Feld mit 60 Minen (ca. 23% Minen) - mit Highscore</li>
+                <li><span class="difficulty-badge">✨ Custom</span> Eigene Einstellungen (5-40 Felder) - ohne Highscore</li>
             </ul>
+            
+            <div class="tip-box">
+                <strong>🏆 Bestzeiten:</strong> Je schneller du gewinnst, desto besser! Deine Top 10 Zeiten werden für Anfänger, Mittel und Experte gespeichert. Bei einer neuen Bestzeit kannst du deinen Namen eingeben!<br><br>
+                <strong>💻 Performance-Tipp:</strong> Bei sehr großen Spielfeldern (z.B. 40x40) kann die Darstellung auf älteren Geräten etwas langsamer sein.
+            </div>
             
             <button class="close-btn" id="closeHelpBtn">Verstanden! 🎮</button>
         </div>
     </div>
     
-    <!-- Modal für Namenseingabe -->
+    <!-- Custom Difficulty Modal -->
+    <div id="customModal" class="custom-modal">
+        <div class="custom-modal-content">
+            <h2>✨ Benutzerdefiniertes Spiel</h2>
+            <p style="text-align:center; font-size:0.9em; color:#95a5a6; margin-bottom:15px;">ⓘ Für Custom-Spiele werden keine Highscores gespeichert</p>
+            
+            <div class="preset-buttons">
+                <button class="preset-btn" data-preset="small">Klein (10x10, 20 Minen)</button>
+                <button class="preset-btn" data-preset="large">Groß (20x20, 80 Minen)</button>
+                <button class="preset-btn" data-preset="extreme">Extrem (30x30, 200 Minen)</button>
+            </div>
+            
+            <div class="input-group">
+                <label>📏 Breite (Spalten):</label>
+                <input type="number" id="customCols" min="5" max="40" value="10">
+                <div class="info-text">Min: 5, Max: 40</div>
+                <div class="error-message" id="colsError"></div>
+            </div>
+            
+            <div class="input-group">
+                <label>📏 Höhe (Reihen):</label>
+                <input type="number" id="customRows" min="5" max="40" value="10">
+                <div class="info-text">Min: 5, Max: 40</div>
+                <div class="error-message" id="rowsError"></div>
+            </div>
+            
+            <div class="input-group">
+                <label>💣 Anzahl Minen:</label>
+                <input type="number" id="customMines" min="1" value="20">
+                <div class="info-text" id="mineInfoText">Empfohlen: 10-40% der Felder</div>
+                <div class="warning-message" id="minesWarning"></div>
+                <div class="error-message" id="minesError"></div>
+            </div>
+            
+            <div class="button-group">
+                <button class="save-btn" id="saveCustomBtn">Starten</button>
+                <button class="cancel-btn" id="cancelCustomBtn">Abbrechen</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal für Namenseingabe (NUR für Standard-Schwierigkeiten) -->
     <div id="nameModal" class="name-modal">
         <div class="name-modal-content">
             <h2>🎉 NEUE BESTZEIT! 🎉</h2>
@@ -508,7 +692,7 @@
     <script>
         class HighscoreManager {
             constructor() {
-                this.storageKey = 'minesweeper_highscores_v2';
+                this.storageKey = 'minesweeper_highscores_v3';
                 this.highscores = this.loadHighscores();
                 this.isCollapsed = true;
                 this.pendingScore = null;
@@ -528,12 +712,14 @@
             }
             
             isNewHighscore(difficulty, timeInSeconds) {
+                if (difficulty === 'custom') return false; // Keine Highscores für Custom
                 const scores = this.highscores[difficulty];
                 if (scores.length < 10) return true;
                 return timeInSeconds < scores[scores.length - 1].time;
             }
             
             showNameDialog(difficulty, timeInSeconds) {
+                if (difficulty === 'custom') return; // Keine Dialoge für Custom
                 this.pendingScore = timeInSeconds;
                 this.pendingDifficulty = difficulty;
                 document.getElementById('modalTime').textContent = timeInSeconds;
@@ -543,6 +729,7 @@
             }
             
             saveHighscoreWithName(name, difficulty, timeInSeconds) {
+                if (difficulty === 'custom') return; // Nicht speichern für Custom
                 if (!name || name.trim() === '') {
                     name = 'Anonym';
                 }
@@ -578,12 +765,15 @@
             
             displayHighscores() {
                 const container = document.getElementById('highscoreContent');
-                if (!container) return;
+                if (!container) {
+                    console.error('highscoreContent Element nicht gefunden!');
+                    return;
+                }
                 
                 const difficulties = {
-                    beginner: 'Anfänger (8x8, 10 Minen)',
-                    intermediate: 'Mittel (12x12, 30 Minen)',
-                    expert: 'Experte (16x16, 60 Minen)'
+                    beginner: '🏅 Anfänger (8x8, 10 Minen)',
+                    intermediate: '🏅 Mittel (12x12, 30 Minen)',
+                    expert: '🏅 Experte (16x16, 60 Minen)'
                 };
                 
                 let html = '';
@@ -643,10 +833,12 @@
             setInitialToggleState() {
                 const content = document.getElementById('highscoreContent');
                 const icon = document.getElementById('toggleIcon');
-                content.classList.add('collapsed');
-                icon.classList.add('collapsed');
-                icon.textContent = '▶';
-                this.isCollapsed = true;
+                if (content && icon) {
+                    content.classList.add('collapsed');
+                    icon.classList.add('collapsed');
+                    icon.textContent = '▶';
+                    this.isCollapsed = true;
+                }
             }
         }
 
@@ -672,17 +864,170 @@
                     });
                 }
                 
-                helpModal.addEventListener('click', (e) => {
-                    if (e.target === helpModal) {
-                        helpModal.style.display = 'none';
-                    }
-                });
-                
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape' && helpModal.style.display === 'flex') {
                         helpModal.style.display = 'none';
                     }
                 });
+            }
+        }
+        
+        class CustomDifficultyManager {
+            constructor(onSave) {
+                this.onSave = onSave;
+                this.init();
+            }
+            
+            init() {
+                const customBtn = document.querySelector('[data-difficulty="custom"]');
+                const modal = document.getElementById('customModal');
+                const saveBtn = document.getElementById('saveCustomBtn');
+                const cancelBtn = document.getElementById('cancelCustomBtn');
+                const presetBtns = document.querySelectorAll('.preset-btn');
+                const colsInput = document.getElementById('customCols');
+                const rowsInput = document.getElementById('customRows');
+                const minesInput = document.getElementById('customMines');
+                
+                if (customBtn) {
+                    customBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        modal.style.display = 'flex';
+                        this.updateMineInfo();
+                        this.clearErrors();
+                    });
+                }
+                
+                presetBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const preset = btn.dataset.preset;
+                        if (preset === 'small') {
+                            colsInput.value = 10;
+                            rowsInput.value = 10;
+                            minesInput.value = 20;
+                        } else if (preset === 'large') {
+                            colsInput.value = 20;
+                            rowsInput.value = 20;
+                            minesInput.value = 80;
+                        } else if (preset === 'extreme') {
+                            colsInput.value = 30;
+                            rowsInput.value = 30;
+                            minesInput.value = 200;
+                        }
+                        this.updateMineInfo();
+                        this.clearErrors();
+                    });
+                });
+                
+                colsInput.addEventListener('input', () => this.validateAndUpdate());
+                rowsInput.addEventListener('input', () => this.validateAndUpdate());
+                minesInput.addEventListener('input', () => this.validateAndUpdate());
+                
+                saveBtn.addEventListener('click', () => {
+                    if (this.validate()) {
+                        const cols = parseInt(colsInput.value);
+                        const rows = parseInt(rowsInput.value);
+                        const mines = parseInt(minesInput.value);
+                        modal.style.display = 'none';
+                        if (this.onSave) {
+                            this.onSave(cols, rows, mines);
+                        }
+                    }
+                });
+                
+                cancelBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                    this.clearErrors();
+                });
+                
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && modal.style.display === 'flex') {
+                        modal.style.display = 'none';
+                        this.clearErrors();
+                    }
+                });
+            }
+            
+            updateMineInfo() {
+                const cols = parseInt(document.getElementById('customCols').value) || 10;
+                const rows = parseInt(document.getElementById('customRows').value) || 10;
+                const total = cols * rows;
+                const minRecommended = Math.max(1, Math.floor(total * 0.1));
+                const maxRecommended = Math.floor(total * 0.4);
+                const infoText = document.getElementById('mineInfoText');
+                infoText.textContent = `Empfohlen: ${minRecommended}-${maxRecommended} Minen (10-40% der ${total} Felder)`;
+            }
+            
+            validateAndUpdate() {
+                this.updateMineInfo();
+                this.validate();
+            }
+            
+            validate() {
+                let isValid = true;
+                
+                const cols = parseInt(document.getElementById('customCols').value);
+                const rows = parseInt(document.getElementById('customRows').value);
+                const mines = parseInt(document.getElementById('customMines').value);
+                
+                const colsError = document.getElementById('colsError');
+                const rowsError = document.getElementById('rowsError');
+                const minesError = document.getElementById('minesError');
+                const minesWarning = document.getElementById('minesWarning');
+                
+                minesWarning.style.display = 'none';
+                
+                if (isNaN(cols) || cols < 5 || cols > 40) {
+                    colsError.textContent = 'Breite muss zwischen 5 und 40 liegen!';
+                    colsError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    colsError.style.display = 'none';
+                }
+                
+                if (isNaN(rows) || rows < 5 || rows > 40) {
+                    rowsError.textContent = 'Höhe muss zwischen 5 und 40 liegen!';
+                    rowsError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    rowsError.style.display = 'none';
+                }
+                
+                if (isValid) {
+                    const total = cols * rows;
+                    const maxMines = total - 1;
+                    const minMines = 1;
+                    const minRecommended = Math.floor(total * 0.1);
+                    const maxRecommended = Math.floor(total * 0.4);
+                    
+                    if (isNaN(mines) || mines < minMines) {
+                        minesError.textContent = `Mindestens 1 Mine erforderlich!`;
+                        minesError.style.display = 'block';
+                        isValid = false;
+                    } else if (mines > maxMines) {
+                        minesError.textContent = `Maximal ${maxMines} Minen möglich (mind. 1 Feld muss sicher sein)!`;
+                        minesError.style.display = 'block';
+                        isValid = false;
+                    } else {
+                        minesError.style.display = 'none';
+                        
+                        if (mines > maxRecommended) {
+                            minesWarning.textContent = `⚠️ Achtung: ${mines} Minen sind sehr schwer (${Math.round(mines/total*100)}% der Felder)! Empfohlen: max. ${maxRecommended} Minen.`;
+                            minesWarning.style.display = 'block';
+                        } else if (mines < minRecommended) {
+                            minesWarning.textContent = `⚠️ ${mines} Minen sind sehr leicht (${Math.round(mines/total*100)}% der Felder). Empfohlen: mind. ${minRecommended} Minen.`;
+                            minesWarning.style.display = 'block';
+                        }
+                    }
+                }
+                
+                return isValid;
+            }
+            
+            clearErrors() {
+                document.getElementById('colsError').style.display = 'none';
+                document.getElementById('rowsError').style.display = 'none';
+                document.getElementById('minesError').style.display = 'none';
+                document.getElementById('minesWarning').style.display = 'none';
             }
         }
 
@@ -844,12 +1189,22 @@
                     expert: { rows: 16, cols: 16, mines: 60, name: 'expert' }
                 };
                 this.currentDifficulty = 'beginner';
+                this.customSettings = null;
                 this.game = null;
                 this.timer = 0;
                 this.timerInterval = null;
                 this.gameStarted = false;
                 this.highscoreManager = new HighscoreManager();
                 this.helpManager = new HelpManager();
+                this.customManager = new CustomDifficultyManager((cols, rows, mines) => {
+                    this.customSettings = { cols, rows, mines };
+                    this.currentDifficulty = 'custom';
+                    this.newGame();
+                    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    document.querySelector('[data-difficulty="custom"]').classList.add('active');
+                });
                 this.init();
             }
             init() {
@@ -893,18 +1248,25 @@
                     }
                 });
                 
-                nameModal.addEventListener('click', (e) => {
-                    if (e.target === nameModal) {
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && nameModal.style.display === 'flex') {
                         nameModal.style.display = 'none';
+                        this.highscoreManager.pendingScore = null;
+                        this.highscoreManager.pendingDifficulty = null;
                     }
                 });
                 
                 const difficultyBtns = document.querySelectorAll('.difficulty-btn');
                 difficultyBtns.forEach(btn => {
                     btn.addEventListener('click', (e) => {
+                        const difficulty = btn.dataset.difficulty;
+                        if (difficulty === 'custom') {
+                            return;
+                        }
                         difficultyBtns.forEach(b => b.classList.remove('active'));
                         btn.classList.add('active');
-                        this.currentDifficulty = btn.dataset.difficulty;
+                        this.currentDifficulty = difficulty;
+                        this.customSettings = null;
                         this.newGame();
                     });
                 });
@@ -933,8 +1295,20 @@
             }
             newGame() {
                 this.stopTimer();
-                const diff = this.difficulties[this.currentDifficulty];
-                this.game = new Minesweeper(diff.rows, diff.cols, diff.mines);
+                let rows, cols, mines;
+                
+                if (this.currentDifficulty === 'custom' && this.customSettings) {
+                    rows = this.customSettings.rows;
+                    cols = this.customSettings.cols;
+                    mines = this.customSettings.mines;
+                } else {
+                    const diff = this.difficulties[this.currentDifficulty];
+                    rows = diff.rows;
+                    cols = diff.cols;
+                    mines = diff.mines;
+                }
+                
+                this.game = new Minesweeper(rows, cols, mines);
                 this.gameStarted = false;
                 this.timer = 0;
                 document.getElementById('timer').textContent = '0';
@@ -949,9 +1323,10 @@
             renderBoard() {
                 const boardElement = document.getElementById('gameBoard');
                 if (!boardElement) return;
-                const diff = this.difficulties[this.currentDifficulty];
-                boardElement.style.gridTemplateColumns = `repeat(${diff.cols}, minmax(30px, 35px))`;
+                
+                boardElement.style.gridTemplateColumns = `repeat(${this.game.cols}, minmax(30px, 35px))`;
                 boardElement.innerHTML = '';
+                
                 for (let i = 0; i < this.game.rows; i++) {
                     for (let j = 0; j < this.game.cols; j++) {
                         const cell = document.createElement('div');
@@ -1007,7 +1382,7 @@
                     this.stopTimer();
                     this.game.revealAllRemainingSafeCells();
                     this.renderBoard();
-                    if (this.gameStarted) {
+                    if (this.gameStarted && this.currentDifficulty !== 'custom') {
                         if (this.highscoreManager.isNewHighscore(this.currentDifficulty, this.timer)) {
                             this.highscoreManager.showNameDialog(this.currentDifficulty, this.timer);
                         } else {
@@ -1015,7 +1390,11 @@
                         }
                     }
                     if (statusDiv) {
-                        statusDiv.textContent = `🎉 Herzlichen Glückwunsch! Du hast gewonnen! Zeit: ${this.timer}s 🎉`;
+                        if (this.currentDifficulty === 'custom') {
+                            statusDiv.textContent = `🎉 Herzlichen Glückwunsch! Du hast gewonnen! Zeit: ${this.timer}s 🎉 (Kein Highscore für Custom)`;
+                        } else {
+                            statusDiv.textContent = `🎉 Herzlichen Glückwunsch! Du hast gewonnen! Zeit: ${this.timer}s 🎉`;
+                        }
                         statusDiv.style.background = '#27ae60';
                     }
                     this.game.gameActive = false;
@@ -1030,7 +1409,7 @@
                     this.stopTimer();
                     this.game.revealAllRemainingSafeCells();
                     this.renderBoard();
-                    if (this.gameStarted) {
+                    if (this.gameStarted && this.currentDifficulty !== 'custom') {
                         if (this.highscoreManager.isNewHighscore(this.currentDifficulty, this.timer)) {
                             this.highscoreManager.showNameDialog(this.currentDifficulty, this.timer);
                         } else {
@@ -1039,7 +1418,11 @@
                     }
                     const statusDiv = document.getElementById('gameStatus');
                     if (statusDiv) {
-                        statusDiv.textContent = `🎉 Herzlichen Glückwunsch! Du hast gewonnen! Zeit: ${this.timer}s 🎉`;
+                        if (this.currentDifficulty === 'custom') {
+                            statusDiv.textContent = `🎉 Herzlichen Glückwunsch! Du hast gewonnen! Zeit: ${this.timer}s 🎉 (Kein Highscore für Custom)`;
+                        } else {
+                            statusDiv.textContent = `🎉 Herzlichen Glückwunsch! Du hast gewonnen! Zeit: ${this.timer}s 🎉`;
+                        }
                         statusDiv.style.background = '#27ae60';
                     }
                     this.game.gameActive = false;
