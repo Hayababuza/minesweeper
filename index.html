@@ -77,6 +77,20 @@
             background: #c0392b;
             transform: scale(1.05);
         }
+        .help-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .help-btn:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
         .game-board {
             display: grid;
             gap: 2px;
@@ -139,6 +153,8 @@
         .difficulty-btn:hover {
             background: #e67e22;
         }
+        
+        /* Highscore Bereich */
         .highscore-section {
             margin-top: 20px;
             background: #34495e;
@@ -220,11 +236,135 @@
         }
         .reset-highscore-btn:hover { background: #d35400; }
         
-        /* Modal Dialog für Namenseingabe */
-        .modal {
+        /* Hilfe Modal Popup */
+        .help-modal {
             display: none;
             position: fixed;
             z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .help-modal-content {
+            background: #2c3e50;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: #ecf0f1;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        /* 🌟 MODERNER SCROLLBAR FÜR DAS POPUP 🌟 */
+        /* Für Webkit-Browser (Chrome, Edge, Safari) */
+        .help-modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .help-modal-content::-webkit-scrollbar-track {
+            background: #1a1a2e;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .help-modal-content::-webkit-scrollbar-thumb {
+            background: #e74c3c;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+        
+        .help-modal-content::-webkit-scrollbar-thumb:hover {
+            background: #c0392b;
+        }
+        
+        /* Für Firefox */
+        .help-modal-content {
+            scrollbar-width: thin;
+            scrollbar-color: #e74c3c #1a1a2e;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .help-modal-content h2 {
+            color: #3498db;
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .help-modal-content h3 {
+            color: #f39c12;
+            margin: 20px 0 10px 0;
+            font-size: 1.1em;
+        }
+        .help-modal-content h3:first-of-type { margin-top: 0; }
+        .help-modal-content ul {
+            margin: 5px 0 10px 20px;
+            padding-left: 0;
+        }
+        .help-modal-content li {
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+        .help-modal-content kbd {
+            background: #1a1a2e;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-family: monospace;
+            border: 1px solid #95a5a6;
+            font-size: 0.9em;
+        }
+        .help-modal-content .tip-box {
+            background: #1a1a2e;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #e74c3c;
+        }
+        .help-modal-content .close-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto 0;
+            transition: background 0.2s;
+        }
+        .help-modal-content .close-btn:hover {
+            background: #c0392b;
+        }
+        .help-modal-content .difficulty-badge {
+            display: inline-block;
+            background: #34495e;
+            padding: 2px 8px;
+            border-radius: 5px;
+            margin: 2px;
+            font-size: 0.85em;
+        }
+        
+        /* Modal für Namenseingabe */
+        .name-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
             left: 0;
             top: 0;
             width: 100%;
@@ -233,7 +373,7 @@
             justify-content: center;
             align-items: center;
         }
-        .modal-content {
+        .name-modal-content {
             background: #2c3e50;
             border-radius: 15px;
             padding: 25px;
@@ -242,11 +382,11 @@
             min-width: 300px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
-        .modal-content h2 {
+        .name-modal-content h2 {
             color: #e74c3c;
             margin-top: 0;
         }
-        .modal-content input {
+        .name-modal-content input {
             padding: 10px;
             font-size: 1.1em;
             border-radius: 8px;
@@ -255,7 +395,7 @@
             margin: 15px 0;
             text-align: center;
         }
-        .modal-content button {
+        .name-modal-content button {
             background: #e74c3c;
             color: white;
             border: none;
@@ -265,15 +405,13 @@
             cursor: pointer;
             margin: 5px;
         }
-        .modal-content button:hover {
+        .name-modal-content button:hover {
             background: #c0392b;
-        }
-        .highscore-time {
-            font-family: 'Courier New', monospace;
         }
         
         @media (max-width: 768px) {
             .cell { width: 30px; height: 30px; font-size: 1em; }
+            .help-modal-content { padding: 20px; }
         }
     </style>
 </head>
@@ -290,23 +428,73 @@
                 <div class="timer">⏱️ <span id="timer">0</span>s</div>
                 <div class="mine-counter">💣 <span id="mineCount">0</span></div>
                 <div class="flag-counter">🚩 <span id="flagCount">0</span></div>
+                <button class="help-btn" id="helpBtn">❓ Hilfe</button>
                 <button class="new-game-btn" id="newGameBtn">🔄 Neues Spiel</button>
             </div>
             <div id="gameBoard" class="game-board"></div>
             <div class="game-status" id="gameStatus">Klicke auf ein Feld, um zu beginnen!</div>
+            
+            <!-- Highscore Bereich - Standardmäßig zugeklappt -->
             <div class="highscore-section">
                 <div class="highscore-header" id="highscoreHeader">
                     <h3>🏆 HIGHSCORES 🏆</h3>
-                    <span class="toggle-icon" id="toggleIcon">▼</span>
+                    <span class="toggle-icon" id="toggleIcon">▶</span>
                 </div>
-                <div class="highscore-content" id="highscoreContent"></div>
+                <div class="highscore-content collapsed" id="highscoreContent"></div>
             </div>
         </div>
     </div>
     
+    <!-- Hilfe Modal Popup -->
+    <div id="helpModal" class="help-modal">
+        <div class="help-modal-content">
+            <h2>❓ Hilfe & Anleitung</h2>
+            
+            <h3>🎯 Spielziel</h3>
+            <p>Decke alle Felder auf, die <strong>keine Minen</strong> enthalten. Triffst du eine Mine, ist das Spiel verloren.</p>
+            
+            <h3>🖱️ Steuerung</h3>
+            <ul>
+                <li><kbd>Linksklick</kbd> - Feld aufdecken</li>
+                <li><kbd>Rechtsklick</kbd> - Flagge setzen/entfernen (markiert vermutete Minen)</li>
+                <li><kbd>❓ Hilfe</kbd> - Diese Anleitung öffnen</li>
+                <li><kbd>🔄 Neues Spiel</kbd> - Startet ein neues Spiel</li>
+                <li><kbd>Anfänger/Mittel/Experte</kbd> - Schwierigkeitsgrad ändern</li>
+            </ul>
+            
+            <h3>🔢 Die Zahlen</h3>
+            <p>Jede Zahl zeigt an, wie viele Minen in den <strong>8 benachbarten Feldern</strong> liegen. Eine <span style="color:#3498db;">❶</span> bedeutet z.B. eine Mine in der Umgebung, eine <span style="color:#e74c3c;">❷</span> zwei Minen usw.</p>
+            
+            <h3>🚩 Flaggen setzen</h3>
+            <p>Wenn du eine Mine vermutest, setze eine Flagge mit <kbd>Rechtsklick</kbd>. Das hilft dir, den Überblick zu behalten. Die Anzeige oben zeigt dir, wie viele Flaggen du bereits gesetzt hast.</p>
+            
+            <h3>💡 Tipps & Tricks</h3>
+            <ul>
+                <li>Der <strong>erste Klick</strong> ist immer sicher - es kann keine Mine sein!</li>
+                <li>Wenn du <strong>alle Minen korrekt markiert</strong> hast, gewinnst du automatisch.</li>
+                <li>Leere Felder (ohne Zahl) decken automatisch ihre Nachbarn auf.</li>
+                <li>Die verbleibenden Minen werden oben links angezeigt: 💣 <span style="color:#e74c3c;">10</span></li>
+                <li>Die Flaggen-Anzeige 🚩 hilft dir, nicht zu viele Flaggen zu setzen.</li>
+            </ul>
+            
+            <div class="tip-box">
+                <strong>🏆 Bestzeiten:</strong> Je schneller du gewinnst, desto besser! Deine Top 10 Zeiten werden pro Schwierigkeitsgrad gespeichert. Bei einer neuen Bestzeit kannst du deinen Namen eingeben!
+            </div>
+            
+            <h3>📊 Schwierigkeitsgrade</h3>
+            <ul>
+                <li><span class="difficulty-badge">Anfänger</span> 8x8 Feld mit 10 Minen</li>
+                <li><span class="difficulty-badge">Mittel</span> 12x12 Feld mit 30 Minen</li>
+                <li><span class="difficulty-badge">Experte</span> 16x16 Feld mit 60 Minen</li>
+            </ul>
+            
+            <button class="close-btn" id="closeHelpBtn">Verstanden! 🎮</button>
+        </div>
+    </div>
+    
     <!-- Modal für Namenseingabe -->
-    <div id="nameModal" class="modal">
-        <div class="modal-content">
+    <div id="nameModal" class="name-modal">
+        <div class="name-modal-content">
             <h2>🎉 NEUE BESTZEIT! 🎉</h2>
             <p>Zeit: <strong id="modalTime">0</strong> Sekunden</p>
             <p>Gib deinen Namen ein:</p>
@@ -322,7 +510,7 @@
             constructor() {
                 this.storageKey = 'minesweeper_highscores_v2';
                 this.highscores = this.loadHighscores();
-                this.isCollapsed = this.loadCollapsedState();
+                this.isCollapsed = true;
                 this.pendingScore = null;
                 this.pendingDifficulty = null;
             }
@@ -339,19 +527,9 @@
                 };
             }
             
-            loadCollapsedState() {
-                return localStorage.getItem('minesweeper_highscore_collapsed') === 'true';
-            }
-            
-            saveCollapsedState(collapsed) {
-                localStorage.setItem('minesweeper_highscore_collapsed', collapsed);
-                this.isCollapsed = collapsed;
-            }
-            
             isNewHighscore(difficulty, timeInSeconds) {
                 const scores = this.highscores[difficulty];
                 if (scores.length < 10) return true;
-                // Prüfen ob die Zeit besser ist als der letzte Eintrag
                 return timeInSeconds < scores[scores.length - 1].time;
             }
             
@@ -460,21 +638,51 @@
                     icon.textContent = '▶';
                 }
                 this.isCollapsed = !this.isCollapsed;
-                this.saveCollapsedState(this.isCollapsed);
             }
             
             setInitialToggleState() {
                 const content = document.getElementById('highscoreContent');
                 const icon = document.getElementById('toggleIcon');
-                if (this.isCollapsed) {
-                    content.classList.add('collapsed');
-                    icon.classList.add('collapsed');
-                    icon.textContent = '▶';
-                } else {
-                    content.classList.remove('collapsed');
-                    icon.classList.remove('collapsed');
-                    icon.textContent = '▼';
+                content.classList.add('collapsed');
+                icon.classList.add('collapsed');
+                icon.textContent = '▶';
+                this.isCollapsed = true;
+            }
+        }
+
+        class HelpManager {
+            constructor() {
+                this.init();
+            }
+            
+            init() {
+                const helpBtn = document.getElementById('helpBtn');
+                const helpModal = document.getElementById('helpModal');
+                const closeBtn = document.getElementById('closeHelpBtn');
+                
+                if (helpBtn) {
+                    helpBtn.addEventListener('click', () => {
+                        helpModal.style.display = 'flex';
+                    });
                 }
+                
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        helpModal.style.display = 'none';
+                    });
+                }
+                
+                helpModal.addEventListener('click', (e) => {
+                    if (e.target === helpModal) {
+                        helpModal.style.display = 'none';
+                    }
+                });
+                
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && helpModal.style.display === 'flex') {
+                        helpModal.style.display = 'none';
+                    }
+                });
             }
         }
 
@@ -641,6 +849,7 @@
                 this.timerInterval = null;
                 this.gameStarted = false;
                 this.highscoreManager = new HighscoreManager();
+                this.helpManager = new HelpManager();
                 this.init();
             }
             init() {
@@ -655,10 +864,10 @@
                 const highscoreHeader = document.getElementById('highscoreHeader');
                 if (highscoreHeader) highscoreHeader.addEventListener('click', () => this.highscoreManager.toggleHighscore());
                 
-                // Modal Event-Listener
                 const saveBtn = document.getElementById('saveScoreBtn');
                 const cancelBtn = document.getElementById('cancelScoreBtn');
                 const nameInput = document.getElementById('playerName');
+                const nameModal = document.getElementById('nameModal');
                 
                 saveBtn.addEventListener('click', () => {
                     const name = nameInput.value;
@@ -667,13 +876,13 @@
                         this.highscoreManager.pendingDifficulty, 
                         this.highscoreManager.pendingScore
                     );
-                    document.getElementById('nameModal').style.display = 'none';
+                    nameModal.style.display = 'none';
                     this.highscoreManager.pendingScore = null;
                     this.highscoreManager.pendingDifficulty = null;
                 });
                 
                 cancelBtn.addEventListener('click', () => {
-                    document.getElementById('nameModal').style.display = 'none';
+                    nameModal.style.display = 'none';
                     this.highscoreManager.pendingScore = null;
                     this.highscoreManager.pendingDifficulty = null;
                 });
@@ -681,6 +890,12 @@
                 nameInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
                         saveBtn.click();
+                    }
+                });
+                
+                nameModal.addEventListener('click', (e) => {
+                    if (e.target === nameModal) {
+                        nameModal.style.display = 'none';
                     }
                 });
                 
@@ -793,7 +1008,6 @@
                     this.game.revealAllRemainingSafeCells();
                     this.renderBoard();
                     if (this.gameStarted) {
-                        // Prüfen ob es eine neue Bestzeit ist
                         if (this.highscoreManager.isNewHighscore(this.currentDifficulty, this.timer)) {
                             this.highscoreManager.showNameDialog(this.currentDifficulty, this.timer);
                         } else {
