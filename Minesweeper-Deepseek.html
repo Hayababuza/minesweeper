@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper - Classic Mini Game</title>
+    <link rel="icon" type="image/png" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%232c3e50'/%3E%3Ccircle cx='50' cy='50' r='25' fill='%23e74c3c'/%3E%3Crect x='45' y='10' width='10' height='30' fill='%232c3e50'/%3E%3Crect x='45' y='60' width='10' height='30' fill='%232c3e50'/%3E%3Crect x='10' y='45' width='30' height='10' fill='%232c3e50'/%3E%3Crect x='60' y='45' width='30' height='10' fill='%232c3e50'/%3E%3C/svg%3E">
+    <style>
+        * { user-select: none; }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .game-container {
+            background: #2c3e50;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        .game-main { min-width: 300px; }
+        .game-header {
+            background: #34495e;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .info-panel {
+            background: #2c3e50;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: #ecf0f1;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .timer {
+            background: #1a1a2e;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2ecc71;
+        }
+        .mine-counter, .flag-counter {
+            background: #1a1a2e;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .new-game-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .new-game-btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+        .game-board {
+            display: grid;
+            gap: 2px;
+            background: #34495e;
+            padding: 2px;
+            border-radius: 8px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .cell {
+            width: 35px;
+            height: 35px;
+            background: #95a5a6;
+            border: 1px solid #7f8c8d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2em;
+            transition: all 0.1s;
+            border-radius: 3px;
+        }
+        .cell:hover {
+            background: #bdc3c7;
+            transform: scale(0.98);
+        }
+        .cell.revealed {
+            background: #ecf0f1;
+            cursor: default;
+            border: 1px solid #bdc3c7;
+        }
+        .cell.revealed:hover { transform: none; }
+        .game-status {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 8px;
+            background: #34495e;
+            color: #ecf0f1;
+        }
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+        }
+        .difficulty-btn {
+            background: #34495e;
+            color: #ecf0f1;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .difficulty-btn.active {
+            background: #e74c3c;
+        }
+        .difficulty-btn:hover {
+            background: #e67e22;
+        }
+        .highscore-section {
+            margin-top: 20px;
+            background: #34495e;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .highscore-header {
+            background: #2c3e50;
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+            user-select: none;
+        }
+        .highscore-header:hover { background: #243342; }
+        .highscore-header h3 {
+            margin: 0;
+            color: #e74c3c;
+            font-size: 1.2em;
+        }
+        .toggle-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+            color: #ecf0f1;
+        }
+        .toggle-icon.collapsed { transform: rotate(-90deg); }
+        .highscore-content {
+            max-height: 500px;
+            overflow-y: auto;
+            transition: max-height 0.3s ease-out, padding 0.3s;
+            padding: 15px;
+        }
+        .highscore-content.collapsed {
+            max-height: 0;
+            padding: 0 15px;
+            overflow: hidden;
+        }
+        .highscore-difficulty { margin-bottom: 20px; }
+        .highscore-difficulty h4 {
+            margin: 10px 0;
+            color: #f39c12;
+            font-size: 1em;
+        }
+        .highscore-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.85em;
+        }
+        .highscore-list li {
+            padding: 5px;
+            border-bottom: 1px solid #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Courier New', monospace;
+            color: #ecf0f1;
+        }
+        .highscore-list li:first-child {
+            background: rgba(241, 196, 15, 0.3);
+            font-weight: bold;
+        }
+        .player-name {
+            font-weight: bold;
+            color: #f39c12;
+        }
+        .reset-highscore-btn {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        .reset-highscore-btn:hover { background: #d35400; }
+        
+        /* Modal Dialog für Namenseingabe */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            color: white;
+            min-width: 300px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+        .modal-content h2 {
+            color: #e74c3c;
+            margin-top: 0;
+        }
+        .modal-content input {
+            padding: 10px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            border: none;
+            width: 80%;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .modal-content button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .modal-content button:hover {
+            background: #c0392b;
+        }
+        .highscore-time {
+            font-family: 'Courier New', monospace;
+        }
+        
+        @media (max-width: 768px) {
+            .cell { width: 30px; height: 30px; font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-main">
+            <div class="game-header">
+                <div class="info-panel">💣 MINESWEEPER</div>
+                <div class="difficulty-selector">
+                    <button class="difficulty-btn active" data-difficulty="beginner">Anfänger</button>
+                    <button class="difficulty-btn" data-difficulty="intermediate">Mittel</button>
+                    <button class="difficulty-btn" data-difficulty="expert">Experte</button>
+                </div>
+                <div class="timer">⏱️ <span id="timer">0</span>s</div>
+                <div class="mine-counter">💣 <span id="mineCount">0</span></div>
+                <div class="flag-counter">🚩 <span id="flagCount">0</span></div>
+                <button class="new-game-btn" id="newGameBtn">🔄 Neues Spiel</button>
+            </div>
+            <div id="gameBoard" class="game-board"></div>
+            <div class="game-status" id="gameStatus">Klicke auf ein Feld, um zu beginnen!</div>
+            <div class="highscore-section">
+                <div class="highscore-header" id="highscoreHeader">
+                    <h3>🏆 HIGHSCORES 🏆</h3>
+                    <span class="toggle-icon" id="toggleIcon">▼</span>
+                </div>
+                <div class="highscore-content" id="highscoreContent"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal für Namenseingabe -->
+    <div id="nameModal" class="modal">
+        <div class="modal-content">
+            <h2>🎉 NEUE BESTZEIT! 🎉</h2>
+            <p>Zeit: <strong id="modalTime">0</strong> Sekunden</p>
+            <p>Gib deinen Namen ein:</p>
+            <input type="text" id="playerName" maxlength="15" placeholder="Dein Name" autocomplete="off">
+            <br>
+            <button id="saveScoreBtn">Speichern</button>
+            <button id="cancelScoreBtn">Abbrechen</button>
+        </div>
+    </div>
+
+    <script>
+        class HighscoreManager {
+            constructor() {
+                this.storageKey = 'minesweeper_highscores_v2';
+                this.highscores = this.loadHighscores();
+                this.isCollapsed = this.loadCollapsedState();
+                this.pendingScore = null;
+                this.pendingDifficulty = null;
+            }
+            
+            loadHighscores() {
+                const saved = localStorage.getItem(this.storageKey);
+                if (saved) {
+                    return JSON.parse(saved);
+                }
+                return {
+                    beginner: [],
+                    intermediate: [],
+                    expert: []
+                };
+            }
+            
+            loadCollapsedState() {
+                return localStorage.getItem('minesweeper_highscore_collapsed') === 'true';
+            }
+            
+            saveCollapsedState(collapsed) {
+                localStorage.setItem('minesweeper_highscore_collapsed', collapsed);
+                this.isCollapsed = collapsed;
+            }
+            
+            isNewHighscore(difficulty, timeInSeconds) {
+                const scores = this.highscores[difficulty];
+                if (scores.length < 10) return true;
+                // Prüfen ob die Zeit besser ist als der letzte Eintrag
+                return timeInSeconds < scores[scores.length - 1].time;
+            }
+            
+            showNameDialog(difficulty, timeInSeconds) {
+                this.pendingScore = timeInSeconds;
+                this.pendingDifficulty = difficulty;
+                document.getElementById('modalTime').textContent = timeInSeconds;
+                document.getElementById('playerName').value = '';
+                document.getElementById('nameModal').style.display = 'flex';
+                document.getElementById('playerName').focus();
+            }
+            
+            saveHighscoreWithName(name, difficulty, timeInSeconds) {
+                if (!name || name.trim() === '') {
+                    name = 'Anonym';
+                }
+                name = name.trim().substring(0, 15);
+                
+                const scores = this.highscores[difficulty];
+                scores.push({
+                    name: name,
+                    time: timeInSeconds,
+                    date: new Date().toLocaleDateString(),
+                    timestamp: Date.now()
+                });
+                
+                scores.sort((a, b) => a.time - b.time);
+                this.highscores[difficulty] = scores.slice(0, 10);
+                this.saveToLocalStorage();
+                this.displayHighscores();
+            }
+            
+            saveToLocalStorage() {
+                localStorage.setItem(this.storageKey, JSON.stringify(this.highscores));
+            }
+            
+            resetHighscores() {
+                this.highscores = {
+                    beginner: [],
+                    intermediate: [],
+                    expert: []
+                };
+                this.saveToLocalStorage();
+                this.displayHighscores();
+            }
+            
+            displayHighscores() {
+                const container = document.getElementById('highscoreContent');
+                if (!container) return;
+                
+                const difficulties = {
+                    beginner: 'Anfänger (8x8, 10 Minen)',
+                    intermediate: 'Mittel (12x12, 30 Minen)',
+                    expert: 'Experte (16x16, 60 Minen)'
+                };
+                
+                let html = '';
+                for (const [key, name] of Object.entries(difficulties)) {
+                    const scores = this.highscores[key];
+                    html += `<div class="highscore-difficulty">
+                        <h4>${name}</h4>
+                        <ul class="highscore-list">`;
+                    
+                    if (scores.length === 0) {
+                        html += `<li><span>— Keine Zeit eingetragen —</span></li>`;
+                    } else {
+                        scores.forEach((score, index) => {
+                            const medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : `${index + 1}. `;
+                            html += `<li>
+                                <span>${medal}<span class="player-name">${this.escapeHtml(score.name)}</span> - ${score.time}s</span>
+                                <span style="font-size:0.75em; color:#95a5a6;">${score.date}</span>
+                            </li>`;
+                        });
+                    }
+                    
+                    html += `</ul></div>`;
+                }
+                
+                html += `<button class="reset-highscore-btn" id="resetHighscoreBtn">🗑️ Alle Bestzeiten zurücksetzen</button>`;
+                container.innerHTML = html;
+                
+                const resetBtn = document.getElementById('resetHighscoreBtn');
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', () => {
+                        if (confirm('Möchten Sie wirklich alle Bestzeiten löschen?')) this.resetHighscores();
+                    });
+                }
+            }
+            
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            toggleHighscore() {
+                const content = document.getElementById('highscoreContent');
+                const icon = document.getElementById('toggleIcon');
+                if (this.isCollapsed) {
+                    content.classList.remove('collapsed');
+                    icon.classList.remove('collapsed');
+                    icon.textContent = '▼';
+                } else {
+                    content.classList.add('collapsed');
+                    icon.classList.add('collapsed');
+                    icon.textContent = '▶';
+                }
+                this.isCollapsed = !this.isCollapsed;
+                this.saveCollapsedState(this.isCollapsed);
+            }
+            
+            setInitialToggleState() {
+                const content = document.getElementById('highscoreContent');
+                const icon = document.getElementById('toggleIcon');
+                if (this.isCollapsed) {
+                    content.classList.add('collapsed');
+                    icon.classList.add('collapsed');
+                    icon.textContent = '▶';
+                } else {
+                    content.classList.remove('collapsed');
+                    icon.classList.remove('collapsed');
+                    icon.textContent = '▼';
+                }
+            }
+        }
+
+        class Minesweeper {
+            constructor(rows, cols, mineCount) {
+                this.rows = rows;
+                this.cols = cols;
+                this.mineCount = mineCount;
+                this.board = [];
+                this.revealed = [];
+                this.flags = [];
+                this.gameActive = true;
+                this.firstMove = true;
+                this.init();
+            }
+            init() {
+                this.board = Array(this.rows).fill().map(() => Array(this.cols).fill(0));
+                this.revealed = Array(this.rows).fill().map(() => Array(this.cols).fill(false));
+                this.flags = Array(this.rows).fill().map(() => Array(this.cols).fill(false));
+                this.gameActive = true;
+                this.firstMove = true;
+            }
+            placeMines(firstRow, firstCol) {
+                let minesPlaced = 0;
+                const safeZone = [];
+                for (let i = -1; i <= 1; i++) {
+                    for (let j = -1; j <= 1; j++) {
+                        const row = firstRow + i;
+                        const col = firstCol + j;
+                        if (row >= 0 && row < this.rows && col >= 0 && col < this.cols) {
+                            safeZone.push(`${row},${col}`);
+                        }
+                    }
+                }
+                while (minesPlaced < this.mineCount) {
+                    const row = Math.floor(Math.random() * this.rows);
+                    const col = Math.floor(Math.random() * this.cols);
+                    const cellKey = `${row},${col}`;
+                    if (!safeZone.includes(cellKey) && this.board[row][col] !== -1) {
+                        this.board[row][col] = -1;
+                        minesPlaced++;
+                    }
+                }
+                for (let i = 0; i < this.rows; i++) {
+                    for (let j = 0; j < this.cols; j++) {
+                        if (this.board[i][j] !== -1) {
+                            this.board[i][j] = this.countAdjacentMines(i, j);
+                        }
+                    }
+                }
+            }
+            countAdjacentMines(row, col) {
+                let count = 0;
+                for (let i = -1; i <= 1; i++) {
+                    for (let j = -1; j <= 1; j++) {
+                        const newRow = row + i;
+                        const newCol = col + j;
+                        if (newRow >= 0 && newRow < this.rows && newCol >= 0 && newCol < this.cols) {
+                            if (this.board[newRow][newCol] === -1) count++;
+                        }
+                    }
+                }
+                return count;
+            }
+            revealCell(row, col) {
+                if (this.revealed[row][col]) return true;
+                if (!this.gameActive) return false;
+                if (this.flags[row][col]) return false;
+                if (this.firstMove) {
+                    this.placeMines(row, col);
+                    this.firstMove = false;
+                }
+                if (this.board[row][col] === -1) {
+                    this.gameActive = false;
+                    this.revealAllMines();
+                    return false;
+                }
+                this.revealCellRecursive(row, col);
+                return true;
+            }
+            revealCellRecursive(row, col) {
+                if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) return;
+                if (this.revealed[row][col]) return;
+                if (this.flags[row][col]) return;
+                this.revealed[row][col] = true;
+                if (this.board[row][col] === 0) {
+                    for (let i = -1; i <= 1; i++) {
+                        for (let j = -1; j <= 1; j++) {
+                            if (i === 0 && j === 0) continue;
+                            this.revealCellRecursive(row + i, col + j);
+                        }
+                    }
+                }
+            }
+            revealAllRemainingSafeCells() {
+                for (let i = 0; i < this.rows; i++) {
+                    for (let j = 0; j < this.cols; j++) {
+                        if (this.board[i][j] !== -1 && !this.revealed[i][j]) {
+                            this.revealed[i][j] = true;
+                        }
+                    }
+                }
+            }
+            toggleFlag(row, col) {
+                if (!this.gameActive) return false;
+                if (this.revealed[row][col]) return false;
+                this.flags[row][col] = !this.flags[row][col];
+                return true;
+            }
+            revealAllMines() {
+                for (let i = 0; i < this.rows; i++) {
+                    for (let j = 0; j < this.cols; j++) {
+                        if (this.board[i][j] === -1) this.revealed[i][j] = true;
+                    }
+                }
+            }
+            checkWin() {
+                let correctlyFlaggedMines = 0;
+                let wrongFlags = 0;
+                for (let i = 0; i < this.rows; i++) {
+                    for (let j = 0; j < this.cols; j++) {
+                        if (this.flags[i][j]) {
+                            if (this.board[i][j] === -1) {
+                                correctlyFlaggedMines++;
+                            } else {
+                                wrongFlags++;
+                            }
+                        }
+                    }
+                }
+                if (correctlyFlaggedMines === this.mineCount && wrongFlags === 0) {
+                    return true;
+                }
+                for (let i = 0; i < this.rows; i++) {
+                    for (let j = 0; j < this.cols; j++) {
+                        if (this.board[i][j] !== -1 && !this.revealed[i][j]) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            getFlagCount() {
+                let count = 0;
+                for (let i = 0; i < this.rows; i++) {
+                    for (let j = 0; j < this.cols; j++) {
+                        if (this.flags[i][j]) count++;
+                    }
+                }
+                return count;
+            }
+        }
+
+        class MinesweeperGame {
+            constructor() {
+                this.difficulties = {
+                    beginner: { rows: 8, cols: 8, mines: 10, name: 'beginner' },
+                    intermediate: { rows: 12, cols: 12, mines: 30, name: 'intermediate' },
+                    expert: { rows: 16, cols: 16, mines: 60, name: 'expert' }
+                };
+                this.currentDifficulty = 'beginner';
+                this.game = null;
+                this.timer = 0;
+                this.timerInterval = null;
+                this.gameStarted = false;
+                this.highscoreManager = new HighscoreManager();
+                this.init();
+            }
+            init() {
+                this.setupEventListeners();
+                this.newGame();
+                this.highscoreManager.displayHighscores();
+                this.highscoreManager.setInitialToggleState();
+            }
+            setupEventListeners() {
+                const newGameBtn = document.getElementById('newGameBtn');
+                if (newGameBtn) newGameBtn.addEventListener('click', () => this.newGame());
+                const highscoreHeader = document.getElementById('highscoreHeader');
+                if (highscoreHeader) highscoreHeader.addEventListener('click', () => this.highscoreManager.toggleHighscore());
+                
+                // Modal Event-Listener
+                const saveBtn = document.getElementById('saveScoreBtn');
+                const cancelBtn = document.getElementById('cancelScoreBtn');
+                const nameInput = document.getElementById('playerName');
+                
+                saveBtn.addEventListener('click', () => {
+                    const name = nameInput.value;
+                    this.highscoreManager.saveHighscoreWithName(
+                        name, 
+                        this.highscoreManager.pendingDifficulty, 
+                        this.highscoreManager.pendingScore
+                    );
+                    document.getElementById('nameModal').style.display = 'none';
+                    this.highscoreManager.pendingScore = null;
+                    this.highscoreManager.pendingDifficulty = null;
+                });
+                
+                cancelBtn.addEventListener('click', () => {
+                    document.getElementById('nameModal').style.display = 'none';
+                    this.highscoreManager.pendingScore = null;
+                    this.highscoreManager.pendingDifficulty = null;
+                });
+                
+                nameInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        saveBtn.click();
+                    }
+                });
+                
+                const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+                difficultyBtns.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        difficultyBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.currentDifficulty = btn.dataset.difficulty;
+                        this.newGame();
+                    });
+                });
+            }
+            stopTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+            }
+            startTimer() {
+                if (!this.timerInterval && this.gameStarted && this.game.gameActive) {
+                    this.timerInterval = setInterval(() => {
+                        if (this.game.gameActive) {
+                            this.timer++;
+                            document.getElementById('timer').textContent = this.timer;
+                        }
+                    }, 1000);
+                }
+            }
+            resetTimer() {
+                this.stopTimer();
+                this.timer = 0;
+                this.gameStarted = false;
+                document.getElementById('timer').textContent = '0';
+            }
+            newGame() {
+                this.stopTimer();
+                const diff = this.difficulties[this.currentDifficulty];
+                this.game = new Minesweeper(diff.rows, diff.cols, diff.mines);
+                this.gameStarted = false;
+                this.timer = 0;
+                document.getElementById('timer').textContent = '0';
+                this.renderBoard();
+                this.updateUI();
+                const statusDiv = document.getElementById('gameStatus');
+                if (statusDiv) {
+                    statusDiv.textContent = 'Klicke auf ein Feld, um zu beginnen!';
+                    statusDiv.style.background = '#34495e';
+                }
+            }
+            renderBoard() {
+                const boardElement = document.getElementById('gameBoard');
+                if (!boardElement) return;
+                const diff = this.difficulties[this.currentDifficulty];
+                boardElement.style.gridTemplateColumns = `repeat(${diff.cols}, minmax(30px, 35px))`;
+                boardElement.innerHTML = '';
+                for (let i = 0; i < this.game.rows; i++) {
+                    for (let j = 0; j < this.game.cols; j++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+                        if (this.game.revealed[i][j]) {
+                            cell.classList.add('revealed');
+                            if (this.game.board[i][j] === -1) {
+                                cell.innerHTML = '💣';
+                            } else if (this.game.board[i][j] > 0) {
+                                cell.innerHTML = this.game.board[i][j];
+                                const colors = ['', '#3498db', '#2ecc71', '#e74c3c', '#9b59b6', '#f39c12', '#1abc9c', '#e67e22', '#c0392b'];
+                                cell.style.color = colors[this.game.board[i][j]] || '#2c3e50';
+                            } else {
+                                cell.innerHTML = '';
+                            }
+                        } else if (this.game.flags[i][j]) {
+                            cell.innerHTML = '🚩';
+                        } else {
+                            cell.innerHTML = '';
+                        }
+                        cell.addEventListener('click', (function(row, col, self) {
+                            return function() { self.handleCellClick(row, col); };
+                        })(i, j, this));
+                        cell.addEventListener('contextmenu', (function(row, col, self) {
+                            return function(e) { 
+                                e.preventDefault(); 
+                                self.handleCellRightClick(row, col); 
+                                return false;
+                            };
+                        })(i, j, this));
+                        boardElement.appendChild(cell);
+                    }
+                }
+                this.updateUI();
+            }
+            handleCellClick(row, col) {
+                if (!this.game.gameActive) return;
+                const wasFirstMove = this.game.firstMove;
+                if (!this.gameStarted && wasFirstMove) {
+                    this.gameStarted = true;
+                    this.startTimer();
+                }
+                const result = this.game.revealCell(row, col);
+                this.renderBoard();
+                const statusDiv = document.getElementById('gameStatus');
+                if (result === false && this.game.gameActive === false) {
+                    this.stopTimer();
+                    if (statusDiv) {
+                        statusDiv.textContent = '💥 Game Over! Du hast eine Mine getroffen! 💥';
+                        statusDiv.style.background = '#c0392b';
+                    }
+                } else if (this.game.checkWin()) {
+                    this.stopTimer();
+                    this.game.revealAllRemainingSafeCells();
+                    this.renderBoard();
+                    if (this.gameStarted) {
+                        // Prüfen ob es eine neue Bestzeit ist
+                        if (this.highscoreManager.isNewHighscore(this.currentDifficulty, this.timer)) {
+                            this.highscoreManager.showNameDialog(this.currentDifficulty, this.timer);
+                        } else {
+                            this.highscoreManager.saveHighscoreWithName('Anonym', this.currentDifficulty, this.timer);
+                        }
+                    }
+                    if (statusDiv) {
+                        statusDiv.textContent = `🎉 Herzlichen Glückwunsch! Du hast gewonnen! Zeit: ${this.timer}s 🎉`;
+                        statusDiv.style.background = '#27ae60';
+                    }
+                    this.game.gameActive = false;
+                }
+            }
+            handleCellRightClick(row, col) {
+                if (!this.game.gameActive) return;
+                this.game.toggleFlag(row, col);
+                this.renderBoard();
+                this.updateUI();
+                if (this.game.checkWin()) {
+                    this.stopTimer();
+                    this.game.revealAllRemainingSafeCells();
+                    this.renderBoard();
+                    if (this.gameStarted) {
+                        if (this.highscoreManager.isNewHighscore(this.currentDifficulty, this.timer)) {
+                            this.highscoreManager.showNameDialog(this.currentDifficulty, this.timer);
+                        } else {
+                            this.highscoreManager.saveHighscoreWithName('Anonym', this.currentDifficulty, this.timer);
+                        }
+                    }
+                    const statusDiv = document.getElementById('gameStatus');
+                    if (statusDiv) {
+                        statusDiv.textContent = `🎉 Herzlichen Glückwunsch! Du hast gewonnen! Zeit: ${this.timer}s 🎉`;
+                        statusDiv.style.background = '#27ae60';
+                    }
+                    this.game.gameActive = false;
+                }
+            }
+            updateUI() {
+                const mineSpan = document.getElementById('mineCount');
+                const flagSpan = document.getElementById('flagCount');
+                if (mineSpan) mineSpan.textContent = this.game.mineCount;
+                if (flagSpan) flagSpan.textContent = this.game.getFlagCount();
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => { new MinesweeperGame(); });
+    </script>
+</body>
+</html>
